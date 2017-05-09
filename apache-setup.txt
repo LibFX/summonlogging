@@ -1,0 +1,14 @@
+
+Required setup for Apache 2.4:
+
+
+    # Custom Logging
+    # do not log accesses to widget2.0.js, because that would log
+    # users' query terms
+    SetEnvIf Request_URI "^/services/summonlogging" dontlog
+    CustomLog ${APACHE_LOG_DIR}/access.log combined env=!dontlog
+
+    # do log click.gif, which is sent on each click
+    SetEnvIf Request_URI "/services/summonlogging/click.gif" clicklog
+    CustomLog ${APACHE_LOG_DIR}/click.log common env=clicklog
+

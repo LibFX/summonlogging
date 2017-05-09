@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html ng-app="SummonPrefApp" lang="en">
+<head>
+<title>Choose your Summon 2.0 Preferences</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-cookies.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-resource.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-sanitize.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.0/moment.min.js"></script>
+
+<script>
+angular.module('SummonPrefApp', ['ngCookies']).controller('PrefAppController', ['$scope', '$cookies', '$timeout', '$sce',
+function (scope, cookies, timeout, sce) {
+    // ...
+    scope.enhversion = cookies['summonv2.enhancement.version'];
+    if (!scope.enhversion)
+        scope.enhversion = "default";
+
+    scope.save = function() {
+        cookies['summonv2.enhancement.version'] = scope.enhversion;
+
+        // apparently, Firefox needs this (!?)
+        // http://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-and-chrome
+        timeout(function () {
+            document.getElementById('w2').contentWindow.location.reload(true);
+        }, 0);
+    }
+    scope.goback = function() {
+        window.history.back();
+    }
+
+    scope.url = "http://libx.lib.vt.edu/services/summonlogging/";
+    scope.widgeturl = sce.trustAsResourceUrl(scope.url + "widget2.0.js");
+
+}]);
+</script>
+</head>
+
+<body ng-controller="PrefAppController">
+<p>
+The controls below allow you to select which Summon 2.0 script is used in your browser,
+and your browser only.  The public will always use the 'default' one.
+Here is the link where you can see what you are currently using:
+<a href="{{widgeturl}}">Test</a> - it's also in the iframe below.
+</p>
+
+<div>
+<form action="">
+<div>
+    <input type="radio" ng-model="enhversion" ng-change="save()" value="testing">
+            Testing:  If enabled, Summon 2.0 will include
+                <a href="{{url}}/testwidget2.0.js">{{url}}testwidget2.0.js</a>
+        This is Godmar's playground.
+</div>
+<div>
+    <input type="radio" ng-model="enhversion" ng-change="save()"value="default">
+        Default:  If enabled, Summon 2.0 will include
+            <a href="{{url}}defaultwidget2.0.js">{{url}}defaultwidget2.0.js</a>
+    <b> This is the "live" one the public uses. </b>
+</div>
+<div>
+    <input type="radio" ng-model="enhversion" ng-change="save()"value="empty">
+        Empty:  If enabled, Summon 2.0 will include an empty file
+            <a href="{{url}}emptywidget2.0.js">{{url}}emptywidget2.0.js</a>
+    This is an empty one to check whether we are interfering.
+</div>
+<div>
+    <input type="radio" ng-model="enhversion" ng-change="save()"value="rsebek">
+        RSebek: If enabled, Summon 2.0 will include this file
+            <a href="{{url}}rsebekwidget2.0.js">{{url}}rsebekwidget2.0.js</a>
+    This is Robert's playground.
+</div>
+</form> 
+
+The iframe below is updated after you change the option. This should also refresh your
+browser's cache, so the next time you visit Summon this script should be in effect.
+<div>
+    <iframe width="100%" height="400px" id="w2" ng-src={{widgeturl}}></iframe>
+</div>
+
+<a href="http://vt.summon.serialssolutions.com">To Summon</a>
+<!--
+<button ng-click="goback()">Go Back to Summon.</button>
+-->
+</div>
+</body>
+</html>

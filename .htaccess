@@ -1,0 +1,14 @@
+RewriteEngine On
+
+RewriteCond %{HTTP_COOKIE} !summonv2.enhancement.version [OR]
+RewriteCond %{HTTP_COOKIE} summonv2.enhancement.version=default
+RewriteRule ^widget2.0.js defaultwidget2.0.js [L]
+
+RewriteCond %{HTTP_COOKIE} summonv2.enhancement.version=testing
+RewriteRule ^widget2.0.js testwidget2.0.js [L]
+
+RewriteCond %{HTTP_COOKIE} summonv2.enhancement.version=empty
+RewriteRule ^widget2.0.js emptywidget2.0.js [L]
+
+RewriteCond %{HTTP_COOKIE} summonv2.enhancement.version=rsebek
+RewriteRule ^widget2.0.js rsebekwidget2.0.js [L]
